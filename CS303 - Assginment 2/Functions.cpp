@@ -200,31 +200,22 @@ void menuDrop(Single_Linked_List& studentList, Stack& dropStack){
 	}
 	else {
 		switch (choiceInt) {
-		case 1: //Add Dropped Student
+		case 1: { //Add Dropped Student
 			addToStack(studentList, dropStack);
 			break;
-		case 2: //Display Dropped Students
+		}
+		case 2: { //Display Dropped Students
 			dropStack.display();
 			break;
-		case 3: { //Readmit First in Line
+		}
+		case 3: { //Display First in line Dropped
+			displayFirstDropped(dropStack);
+			break;
+		}
+		case 4:{ //Re-admit Student
 			readmitFromStack(studentList, dropStack);
 			break;
 		}
-		case 4:
-			if (!dropStack.isEmpty()) {
-				Students* topStudent = dropStack.top();
-				cout << "Re-admitting student: "
-					<< topStudent->getFirstName() << " "
-					<< topStudent->getLastName()
-					<< " (GPA: " << fixed << setprecision(2) << topStudent->getGpa() << ")" << endl;
-				dropStack.pop(); // Remove from stack
-				topStudent->setStatus('C'); // Update status to Current
-				studentList.push_back(topStudent); // Add back to student list
-			}
-			else {
-				cout << "No students in drop stack to re-admit." << endl << endl;
-			}
-			break;
 		case 5:
 			removeFromStack(studentList, dropStack);
 			break;
@@ -287,6 +278,19 @@ void addToStack(Single_Linked_List& studentList, Stack& dropStack) {
 	cout << "Student with ID " << id << " has been dropped and added to the stack.\n";
 
 	menuDrop(studentList, dropStack);
+}
+
+void displayFirstDropped(const Stack& dropStack) {
+	if (dropStack.isEmpty()) {
+		cout << "No students in drop stack." << endl << endl;
+		return;
+	}
+
+	Students* topStudent = dropStack.top();
+	cout << "Next to be re-admitted: "
+		<< topStudent->getFirstName() << " "
+		<< topStudent->getLastName()
+		<< " (GPA: " << fixed << setprecision(2) << topStudent->getGpa() << ")" << endl << endl;
 }
 
 

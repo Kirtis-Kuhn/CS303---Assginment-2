@@ -12,6 +12,7 @@ void menuStudent(Single_Linked_List& studentList, Stack& dropStack);
 
 //Drop menu functions
 void addToStack(Single_Linked_List& studentList, Stack& dropStack);
+void displayFirstDropped(const Stack& dropStack);
 void readmitFromStack(Single_Linked_List& studentList, Stack& dropStack);
 void removeFromStack(Single_Linked_List& studentList, Stack& dropStack);
 
