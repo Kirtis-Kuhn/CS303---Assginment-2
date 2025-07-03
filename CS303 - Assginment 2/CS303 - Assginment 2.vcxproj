@@ -129,6 +129,7 @@
     <ClCompile Include="Stack.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="..\..\..\..\..\Downloads\Key.txt" />
     <Text Include="DataFile.txt" />
     <Text Include="error_log.txt" />
   </ItemGroup>

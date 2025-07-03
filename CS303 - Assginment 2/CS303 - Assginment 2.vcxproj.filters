@@ -49,6 +49,9 @@
     <Text Include="error_log.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="..\..\..\..\..\Downloads\Key.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <None Include="student_output.csv">
