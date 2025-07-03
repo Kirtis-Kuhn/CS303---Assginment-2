@@ -206,10 +206,12 @@ void menuDrop(Single_Linked_List& studentList, Stack& dropStack){
 		}
 		case 2: { //Display Dropped Students
 			dropStack.display();
+			menuDrop(studentList, dropStack);
 			break;
 		}
 		case 3: { //Display First in line Dropped
 			displayFirstDropped(dropStack);
+			menuDrop(studentList, dropStack);
 			break;
 		}
 		case 4:{ //Re-admit Student
@@ -400,15 +402,19 @@ void menuStudent(Single_Linked_List& studentList, Stack& dropStack) {
 			switch (choiceInt) {
 			case 1: // Add Student
 					addStudent(studentList);
+					menuStudent(studentList, dropStack);
 					break;
 			case 2: // Display Students
 					studentList.display();
+					menuStudent(studentList, dropStack);
 					break;
 			case 3: // Remove Student
 					removeStudent(studentList);
+					menuStudent(studentList, dropStack);
 					break;
 			default: // Loop Until Valid Choice
 					cout << "Invalid choice. Please try again." << endl;
+					menuStudent(studentList, dropStack);
 			}
 		}
 }
