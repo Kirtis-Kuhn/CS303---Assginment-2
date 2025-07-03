@@ -14,21 +14,20 @@ public:
     Single_Linked_List();
     ~Single_Linked_List();
 
+    //Edit Functions
     void push_front(Students* s);
     void push_back(Students* s);
     void pop_front();
     void pop_back();
+    void insert(size_t index, Students* s);
+    bool remove(size_t index);
 
+	// Access Functions
     Students* front();
     Students* back();
     bool empty() const;
     Students* getAt(size_t index) const;
-
-
-    void insert(size_t index, Students* s);
-    bool remove(size_t index);
     size_t find(int id) const;
-
     void display() const;
     Node* getHead() const { return head; }
 

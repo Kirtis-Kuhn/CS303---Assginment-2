@@ -24,6 +24,7 @@ int main()
 	// Menu
 	menu(studentList, dropStack); 
 
+	// Write Data
 	writeFile(studentList, dropStack);
 
 	return 0;

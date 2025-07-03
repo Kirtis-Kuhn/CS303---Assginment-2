@@ -17,7 +17,6 @@ string toUpper(const string& str) {
 }
 
 
-
 void Intro() {
 	string formatTN = "Intro";
 	int formatTitle = (100 - formatTN.size()) / 2;
@@ -36,12 +35,16 @@ void Intro() {
 }
 
 void readFile(ifstream& in, Single_Linked_List& list, Stack& dropStack) {
+
+	//Error handling File
 	ofstream err("error_log.txt");
 	if (!err.good() || !in.is_open()) {
 		cout << "Error opening file(s)." << endl;
 		return;
 	}
 
+
+	// Read each line from the file
 	string line, token;
 	while (getline(in, line)) {
 		stringstream ss(line);
@@ -53,7 +56,6 @@ void readFile(ifstream& in, Single_Linked_List& list, Stack& dropStack) {
 		try {
 			if (tokens.size() < 5) throw runtime_error("Insufficient data in line");
 			if (!isDigit(tokens[0])) throw runtime_error("ID must be a digit");
-		
 
 			int id = stoi(tokens[0]);
 			char status = tokens[1][0];
@@ -65,7 +67,7 @@ void readFile(ifstream& in, Single_Linked_List& list, Stack& dropStack) {
 
 			Students* newStudent = new Students(id, status, firstName, lastName, gpa);
 
-
+			//Vaildate ID uniqueness
 			if (list.find(id) != static_cast<size_t>(-1)) {
 				throw runtime_error("ID already taken in student list");
 			}
@@ -76,6 +78,7 @@ void readFile(ifstream& in, Single_Linked_List& list, Stack& dropStack) {
 				}
 			}
 
+			// Add to the appropriate list or stack
 			if (toupper(status) == 'D') {
 				dropStack.push(newStudent);
 			}
@@ -84,6 +87,7 @@ void readFile(ifstream& in, Single_Linked_List& list, Stack& dropStack) {
 			}
 		}
 		catch (const runtime_error& e) {
+			// Log the error to the error file
 			err << "Error: " << line << " - " << e.what() << endl;
 			continue;
 		}
@@ -101,6 +105,7 @@ void menu(Single_Linked_List& studentList, Stack& dropStack){
 	int formatTitle = (100 - formatTN.size()) / 2;
 	vector<string> vChoices = { "Drop List Menu", "Student Menu", "Exit Program" };
 
+	//Format and Display Menu
 	cout << endl << string(formatTitle, ' ') << formatTN << endl;
 	cout << string(100, '=') << endl;
 
@@ -120,23 +125,25 @@ void menu(Single_Linked_List& studentList, Stack& dropStack){
 
 	int choiceInt = stoi(choice);
 
+	//Check for Exit
 	if (choiceInt == vChoices.size()) {
 		cout << "Exiting Program..." << endl << endl;
 		return;
 	}
+	//Check for Valid Choice
 	else if (choiceInt < 1 || choiceInt > vChoices.size()) {
 		cout << "Invalid choice. Please try again." << endl;
 		menu(studentList, dropStack);
 	}
 	else {
 		switch (choiceInt) {
-		case 1:
+		case 1: // Drop List Menu
 			menuDrop(studentList, dropStack);
 			break;
-		case 2:
+		case 2: // Student Menu
 			menuStudent(studentList, dropStack);
 			break;
-		default:
+		default: //Loop Until Valid Choice
 			cout << "Invalid choice. Please try again." << endl << endl;
 			menu(studentList, dropStack);
 		}
@@ -145,6 +152,7 @@ void menu(Single_Linked_List& studentList, Stack& dropStack){
 
 void menuDrop(Single_Linked_List& studentList, Stack& dropStack){
 
+	//Drop Menu Intro because Senario doesnt make sense > but still went with it
 	cout << endl << string(100, '~') << endl;
 	cout << "Welcome to the Dropped Student Menu!" << endl;
 	cout << "This functionality is very strange. This is because students who are dropped must wait, " << endl;
@@ -156,8 +164,10 @@ void menuDrop(Single_Linked_List& studentList, Stack& dropStack){
 	string formatTN = "Dropped Student Menu";
 	int formatTitle = (100 - formatTN.size()) / 2;
 	vector<string> vChoices = { "Add Dropped Student", "Display Dropped Students", "Display First in line Dropped",
-								"Re-admit Student", "Remove Dropped Student", "Return to Main Menu" };
+								"Re-admit Student", "Remove Dropped Student", "Return to Main Menu" 
+	};
 
+	//Format and Display Menu
 	cout << endl << string(formatTitle, ' ') << formatTN << endl;
 	cout << string(100, '-') << endl;
 
@@ -178,33 +188,26 @@ void menuDrop(Single_Linked_List& studentList, Stack& dropStack){
 
 	int choiceInt = stoi(choice);
 
+	//Check for Exit
 	if (choiceInt == vChoices.size()) {
 		cout << "Exiting Dropped menu..." << endl << endl;
 		menu(studentList, dropStack); // Return to main menu
 	}
+	//Check for Valid Choice
 	else if (choiceInt < 1 || choiceInt > vChoices.size()) {
 		cout << "Invalid choice. Please try again." << endl;
 		menuDrop(studentList, dropStack);
 	}
 	else {
 		switch (choiceInt) {
-		case 1:
+		case 1: //Add Dropped Student
 			addToStack(studentList, dropStack);
 			break;
-		case 2:
+		case 2: //Display Dropped Students
 			dropStack.display();
 			break;
-		case 3: {
-			Students* topStudent = dropStack.top();
-			if (topStudent) {
-				cout << "Next to be re-admitted: "
-					<< topStudent->getFirstName() << " "
-					<< topStudent->getLastName()
-					<< " (GPA: " << fixed << setprecision(2) << topStudent->getGpa() << ")" << endl;
-			}
-			else {
-				cout << "No students in drop stack." << endl << endl;
-			}
+		case 3: { //Readmit First in Line
+			readmitFromStack(studentList, dropStack);
 			break;
 		}
 		case 4:
@@ -287,13 +290,44 @@ void addToStack(Single_Linked_List& studentList, Stack& dropStack) {
 }
 
 
+void readmitFromStack(Single_Linked_List& studentList, Stack& dropStack) {
+	// Check if drop stack is empty
+	if (dropStack.isEmpty()) {
+		cout << "No students in drop stack." << endl << endl;
+		return;
+	}
+
+	Students* topStudent = dropStack.top();
+	cout << "Next to be re-admitted: "
+		<< topStudent->getFirstName() << " "
+		<< topStudent->getLastName()
+		<< " (GPA: " << fixed << setprecision(2) << topStudent->getGpa() << ")" << endl;
+
+	string input;
+	cout << "Would you like to re-admit this student? (yes/no): ";
+	cin >> input;
+
+	if (toUpper(input) == "YES" || toUpper(input) == "Y") {
+		Students* reAdmitted = new Students(*topStudent); // Deep copy
+		reAdmitted->setStatus('C'); // Mark as current
+		studentList.push_back(reAdmitted);
+		dropStack.pop();
+		cout << "Student has been re-admitted.\n";
+	}
+	else {
+		cout << "Re-admission cancelled.\n";
+	}
+}
+
+
 void removeFromStack(Single_Linked_List& studentList, Stack& dropStack) {
+	// Check if drop stack is empty
 	if (dropStack.isEmpty()) {
 		cout << "No students in drop stack to remove." << endl << endl;
 		return;
 	}
 
-	Students* topStudent = dropStack.top();
+	Students* topStudent = dropStack.top(); //Get the top student from the drop stack
 	cout << "\nTop student in drop stack:\n";
 	cout << "ID: " << topStudent->getId()
 		<< ", Name: " << topStudent->getFirstName() << " " << topStudent->getLastName()
@@ -307,13 +341,13 @@ void removeFromStack(Single_Linked_List& studentList, Stack& dropStack) {
 	cin >> input;
 
 	if (toUpper(input) == "YES" || toUpper(input) == "Y") {
-		dropStack.pop();
+		dropStack.pop(); // Remove from drop stack
 		cout << "Student removed from drop stack.\n" << endl;
 	}
 	else {
 		cout << "Removal cancelled.\n" << endl;
 	}
-	menuDrop(studentList, dropStack);
+	menuDrop(studentList, dropStack); // Return to drop menu
 }
 
 
@@ -322,10 +356,13 @@ void menuStudent(Single_Linked_List& studentList, Stack& dropStack) {
 	string choice;
 	string formatTN = "Student Menu";
 	int formatTitle = (100 - formatTN.size()) / 2;
-	vector<string> vChoices = { "Add Student", "Display Students", "Remove Student", "Return to Main Menu" };
+	vector<string> vChoices = { "Add Student", "Display Students", "Remove Student",
+								"Return to Main Menu"
+	};
 
-		cout << endl << string(formatTitle, ' ') << formatTN << endl;
-		cout << string(100, '-') << endl;
+	//Format and Display Menu
+	cout << endl << string(formatTitle, ' ') << formatTN << endl;
+	cout << string(100, '-') << endl;
 		
 		for(int i = 0; i < vChoices.size(); i++) {
 			cout << setw(2) << i + 1 << ") " << vChoices[i] << endl;
@@ -345,29 +382,31 @@ void menuStudent(Single_Linked_List& studentList, Stack& dropStack) {
 
 		int choiceInt = stoi(choice);
 
+		//Check for Exit
 		if(choiceInt == vChoices.size()) {
 			cout << "Exiting Student menu..." << endl << endl;
 			menu(studentList, dropStack);
 		} 
+		//Check for Valid Choice
 		else if (choiceInt < 1 || choiceInt > vChoices.size()) {
 			cout << "Invalid choice. Please try again." << endl << endl;
 			menuStudent(studentList, dropStack);
 		} 
 		else {
 			switch (choiceInt) {
-				case 1:
+			case 1: // Add Student
 					addStudent(studentList);
 					break;
-				case 2:
+			case 2: // Display Students
 					studentList.display();
 					break;
-				case 3:
+			case 3: // Remove Student
 					removeStudent(studentList);
 					break;
-				default:
+			default: // Loop Until Valid Choice
 					cout << "Invalid choice. Please try again." << endl;
 			}
-			menuStudent(studentList, dropStack);
+			menuStudent(studentList, dropStack); //Loop After Input
 		}
 }
 
@@ -465,6 +504,12 @@ bool addStudent(Single_Linked_List& studentList) {
 }
 
 bool removeStudent(Single_Linked_List& studentList) {
+	// Check if the student list is empty
+	if (studentList.empty()) {
+		cout << "No students available to remove." << endl;
+		return false;
+	}
+
 	vector<string> removeOptions = { "Remove by ID", "Remove by First and Last Name" };
 	string input;
 	bool isValid = false;
@@ -478,6 +523,7 @@ bool removeStudent(Single_Linked_List& studentList) {
 		cout << "Enter your choice (or type 'exit'): ";
 		cin >> input;
 		string lower = toUpper(input);
+		cout << endl << endl;
 
 		if (lower == "EXIT" || lower == "QUIT") return false;
 
@@ -493,15 +539,17 @@ bool removeStudent(Single_Linked_List& studentList) {
 					continue;
 				}
 
+				cout << endl;
 				int id = stoi(input);
-				size_t index = studentList.find(id);
-				if (index != static_cast<size_t>(-1)) {
+				size_t index = studentList.find(id); // Find the index of the student with the given ID
+
+				if (index != static_cast<size_t>(-1)) { // If the student is found
 					studentList.remove(index);
-					cout << "Student removed from student list.\n";
+					cout << "Student removed from student list.\n\n";
 					return true;
 				}
 
-				cout << "No student with ID " << id << " found.\n";
+				cout << "No student with ID " << id << " found.\n"; //else Case
 				return false;
 			}
 		}
@@ -513,14 +561,20 @@ bool removeStudent(Single_Linked_List& studentList) {
 			cin >> firstName;
 			if (toUpper(firstName) == "EXIT") return false;
 
+			cout << endl;
+
 			cout << "Enter Last Name (or 'exit'): ";
 			cin >> lastName;
 			if (toUpper(lastName) == "EXIT") return false;
 
+			cout << endl;
+
+			//Initialize search variables
 			size_t index = 0;
 			bool found = false;
-
 			Single_Linked_List::Node* cur = studentList.getHead();
+
+			// Search through the student list
 			while (cur) {
 				if (toUpper(cur->student->getFirstName()) == toUpper(firstName) &&
 					toUpper(cur->student->getLastName()) == toUpper(lastName)) {
@@ -532,7 +586,7 @@ bool removeStudent(Single_Linked_List& studentList) {
 				index++;
 			}
 
-			cout << "Student not found.\n";
+			cout << "Student not found.\n"; //Else Case
 			return false;
 		}
 

@@ -29,6 +29,7 @@ Students* Stack::top() const {
     }
 }
 
+//Extra function so why not?
 double Stack::average() const {
     if (isEmpty()) return 0.0;
 

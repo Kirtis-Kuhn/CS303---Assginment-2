@@ -1,7 +1,5 @@
 #pragma once
-#include <vector>
-#include <iostream>
-#include <numeric>
+
 #include "Students.h"
 
 using namespace std;
@@ -13,9 +11,12 @@ private:
 public:
     Stack();
 
-    bool isEmpty() const;
+    //Edit Funcitons
     void push(Students* value);
     void pop();
+
+	// Access Functions
+    bool isEmpty() const;
     Students* top() const;
     double average() const;
 	vector<Students*> getRawStack() const { return stack; } 

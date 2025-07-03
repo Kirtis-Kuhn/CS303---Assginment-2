@@ -5,11 +5,12 @@
 #include <iomanip>
 #include <vector>
 #include <sstream>
+#include <numeric>
 
 using namespace std;
 
 struct Data{
-	int id;
+	int id; // Numeric ID
 	char status; // 'C' for current, 'D' for dropped, 'P' for probation
 	string firstName;
 	string lastName;
