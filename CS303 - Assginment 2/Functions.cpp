@@ -223,7 +223,6 @@ void menuDrop(Single_Linked_List& studentList, Stack& dropStack){
 			cout << "Invalid choice. Please try again." << endl << endl;
 			break;
 		}
-		menuDrop(studentList, dropStack);
 	}
 }
 
@@ -321,6 +320,7 @@ void readmitFromStack(Single_Linked_List& studentList, Stack& dropStack) {
 	else {
 		cout << "Re-admission cancelled.\n";
 	}
+	menuDrop(studentList, dropStack);
 }
 
 
@@ -410,7 +410,6 @@ void menuStudent(Single_Linked_List& studentList, Stack& dropStack) {
 			default: // Loop Until Valid Choice
 					cout << "Invalid choice. Please try again." << endl;
 			}
-			menuStudent(studentList, dropStack); //Loop After Input
 		}
 }
 
