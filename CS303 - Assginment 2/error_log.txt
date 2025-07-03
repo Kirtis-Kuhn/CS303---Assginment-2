@@ -1,0 +1,5 @@
+Error: 1016,C,Rachel,Adams,3.25 - ID already taken in student list
+Error: 1015,P,Kevin,Young,1.88 - ID already taken in student list
+Error: 1031,P,Andrew,Watson,1.55 - ID already taken in student list
+Error: 1012,C,Karen,Lewis,3.7 - ID already taken in student list
+Error: 1009,P,Ethan,Hill,1.94 - ID already taken in student list
