@@ -287,7 +287,7 @@ void displayFirstDropped(const Stack& dropStack) {
 	}
 
 	Students* topStudent = dropStack.top();
-	cout << "Next to be re-admitted: "
+	cout << "\nNext to be re-admitted: "
 		<< topStudent->getFirstName() << " "
 		<< topStudent->getLastName()
 		<< " (GPA: " << fixed << setprecision(2) << topStudent->getGpa() << ")" << endl << endl;
